@@ -18,6 +18,7 @@
 
 //宏定义小人移动的条件
 #define isValid(pos) (pos.x>=0)&&(pos.x<=LINE)&&(pos.y>=0)&&(pos.y<=CLOUMN)
+#define limit_step 70
 
 /************************
 *运用类型定义给类型起别名
@@ -50,3 +51,13 @@ struct _POS {   //用于表示小人在二维数组中的位置
 	int x;
 	int y;
 }; 
+
+/**************************
+*函数声明`
+**************************/
+void inimap(void);
+void key_Control(void);
+void game_Control(DIRECTION direction);
+bool isGameOver(void);
+void GameOverScene(IMAGE *bg,char ch);
+void changeMap(POS *pos, PROP prop);
