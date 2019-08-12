@@ -51,6 +51,26 @@ struct _POS {   //用于表示小人在二维数组中的位置
 	int x;
 	int y;
 }; 
+/**************************
+*全局变量声明及定义
+**************************/
+POS man;
+POS Boxdes_pos; //用于保存箱子目的地的坐标
+int steps = 0;  //用于保存小人移动的步数
+int Boxdes_num = 0;    //用于保存箱子目的地的数量
+int map[LINE][CLOUMN] = { { 0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,1,0,1,1,1,1,1,1,1,0,0 },
+{ 0,1,4,1,0,2,1,0,2,1,0,0 },
+{ 0,1,0,1,0,1,0,0,1,1,1,0 },
+{ 0,1,0,2,0,1,1,4,1,1,1,0 },
+{ 0,1,1,1,0,3,1,1,1,4,1,0 },
+{ 0,1,2,1,1,4,1,1,1,1,1,0 },
+{ 0,1,0,0,1,0,1,1,0,0,1,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0 } };
+IMAGE images[ALL];
+IMAGE bg_img;      //用于保存游戏开始屏幕背景
+IMAGE success_img; //用于保存游戏胜利屏幕背景
+IMAGE defeat_img;  //用于保存游戏失败屏幕背景
 
 /**************************
 *函数声明`
@@ -61,3 +81,4 @@ void game_Control(DIRECTION direction);
 bool isGameOver(void);
 void GameOverScene(IMAGE *bg,char ch);
 void changeMap(POS *pos, PROP prop);
+void step_Show(int step);

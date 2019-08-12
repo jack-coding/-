@@ -5,29 +5,13 @@
 #include<conio.h>
 #include"boxman.h"
 using namespace std;
-POS man;
-POS Boxdes_pos; //用于保存箱子目的地的坐标
-int steps = 0;  //用于保存小人移动的步数
-int Boxdes_num = 0;    //用于保存箱子目的地的数量
-int map[LINE][CLOUMN] = { { 0,0,0,0,0,0,0,0,0,0,0,0 },
-                          { 0,1,0,1,1,1,1,1,1,1,0,0 },
-                          { 0,1,4,1,0,2,1,0,2,1,0,0 },
-                          { 0,1,0,1,0,1,0,0,1,1,1,0 },
-                          { 0,1,0,2,0,1,1,4,1,1,1,0 },
-                          { 0,1,1,1,0,3,1,1,1,4,1,0 },
-                          { 0,1,2,1,1,4,1,1,1,1,1,0 },
-                          { 0,1,0,0,1,0,1,1,0,0,1,0 },
-                          { 0,0,0,0,0,0,0,0,0,0,0,0 } };
-IMAGE images[ALL];
-IMAGE bg_img;      //用于保存游戏开始屏幕背景
-IMAGE success_img; //用于保存游戏胜利屏幕背景
-IMAGE defeat_img;  //用于保存游戏失败屏幕背景
 
 int main(void) {
 	inimap();
 	key_Control();
 	return 0;
 }
+
 /******************
 *功能:实现游戏地图的打印
 *输入:加载图片
@@ -71,6 +55,27 @@ void inimap(void) {
 	settextstyle(25, 0, _T("幼圆"));
 	outtextxy(120, 30, _T("操作说明: w:上移  a:左移  s:下移  d:右移  q:退出游戏"));
 	outtextxy(120, 75, _Tmove_rules);
+	step_Show(steps);//显示当前小人所走的步数
+}
+/******************
+*功能:显示当前小人已走的步数
+*输入:当前小人所走的步数
+*输出:在游戏地图上显示出当前小人所走的步数
+*返回值:无
+*******************/
+void step_Show(int step) {
+	char num[10];
+	TCHAR _Tnum[10];
+	IMAGE tem_img;
+	loadimage(&tem_img, _T("blackground.bmp"), 50, 40, true);
+	setbkmode(TRANSPARENT);
+	settextcolor(YELLOW);
+	settextstyle(25, 0, _T("幼圆"));
+	outtextxy(320, 75, _T("当前步数:"));
+	putimage(450, 75, &tem_img);
+	sprintf_s(num, sizeof(num), "%d步", step);//将整型变量写入char数组
+	MultiByteToWideChar(CP_ACP, 0, num, -1, _Tnum, 100);//char类型转换成TCHAR类型
+	outtextxy(450, 75, _Tnum);
 }
 /******************
 *功能:获取玩家按键,并对每一次输入进行处理
@@ -99,6 +104,7 @@ void key_Control(void) {
 				quit = true;
 				GameOverScene(&bg_img,ch);
 			}
+			step_Show(steps);//显示当前小人所走的步数
 			if (isGameOver()) {//判断是否所有箱子到达目的地,如果是,则游戏结束,否则游戏继续
 				quit = true;
 				GameOverScene(&bg_img,ch);
@@ -129,8 +135,8 @@ void changeMap(POS *pos, PROP prop) {
 *返回值:无
 ******************/
 void game_Control(DIRECTION direction) {
-	struct _POS next_pos = man;
-	struct _POS next_pos_next_pos = man;
+	POS next_pos = man;
+	POS next_pos_next_pos = man;
 	
 	switch (direction) {
 	case UP:
@@ -226,7 +232,7 @@ bool isGameOver(void) {
 /***********************
 *功能:实现游戏结束场景
 *输入:图片地址 按键输入
-*输出:失败胜利图片或文字
+*输出:失败或胜利图片或文字
 *返回值:无
 ***********************/
 void GameOverScene(IMAGE *end,char ch) {
